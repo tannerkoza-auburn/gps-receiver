@@ -61,7 +61,7 @@ classdef gnssReceiver < handle
     methods (Hidden, Sealed, Static)
         
         % Input Data Dimension Handling
-        [psr, dopp, svPos, svVel] = dimHandle(psr, dopp, svPos, svVel)
+        varargout = dimHandle(varargin)
 
     end
 
