@@ -91,55 +91,55 @@ function out = pv3D(obj, psr, dopp, svPos, svVel, svClockCorr, carrFreq)
 
 %% Nested Functions
 
-function unitVecs
-
-    % Initialization
-    uhat_x = zeros(numMeas,1);
-    uhat_y = zeros(numMeas,1);
-    uhat_z = zeros(numMeas,1);
-
-    % Calculate Satellite Unit Vectors
-    for i = 1:numMeas
-
-        r = sqrt( ( svPos(1,i) - est(1) )^2 ...
-            + ( svPos(2,i) - est(2) )^2 ...
-            + ( svPos(3,i) - est(3) )^2);
-
-        uhat_x(i) = ( svPos(1,i) - est(1) )/ r;
-
-        uhat_y(i) = ( svPos(2,i) - est(2) )/ r;
-
-        uhat_z(i) = ( svPos(3,i) - est(3) )/ r;
-
+    function unitVecs
+    
+        % Initialization
+        uhat_x = zeros(numMeas,1);
+        uhat_y = zeros(numMeas,1);
+        uhat_z = zeros(numMeas,1);
+    
+        % Calculate Satellite Unit Vectors
+        for i = 1:numMeas
+    
+            r = sqrt( ( svPos(1,i) - est(1) )^2 ...
+                + ( svPos(2,i) - est(2) )^2 ...
+                + ( svPos(3,i) - est(3) )^2);
+    
+            uhat_x(i) = ( svPos(1,i) - est(1) )/ r;
+    
+            uhat_y(i) = ( svPos(2,i) - est(2) )/ r;
+    
+            uhat_z(i) = ( svPos(3,i) - est(3) )/ r;
+    
+        end
+    
+        uvs = [uhat_x uhat_y uhat_z];
+    
     end
-
-    uvs = [uhat_x uhat_y uhat_z];
-
-end
-
-function measVec
-
-    % Initialization 
-    psrhat = zeros(numMeas,1);
-    dopphat = zeros(numMeas,1);
-
-    % Measurement Vector Population
-    for i = 1:numMeas
-
-        psrhat(i) = sqrt( ( svPos(1,i) - est(1) )^2 ...
-            + ( svPos(2,i) - est(2) )^2 ...
-            + ( svPos(3,i) - est(3) )^2) + est(4) - svClockCorr(i);
-
-        dopphat(i) = uvs(i,1) * svVel(1,i) + ...
-                       uvs(i,2) * svVel(2,i) + uvs(i,3) * svVel(3,i);
-
+    
+    function measVec
+    
+        % Initialization 
+        psrhat = zeros(numMeas,1);
+        dopphat = zeros(numMeas,1);
+    
+        % Measurement Vector Population
+        for i = 1:numMeas
+    
+            psrhat(i) = sqrt( ( svPos(1,i) - est(1) )^2 ...
+                + ( svPos(2,i) - est(2) )^2 ...
+                + ( svPos(3,i) - est(3) )^2) + est(4) - svClockCorr(i);
+    
+            dopphat(i) = uvs(i,1) * svVel(1,i) + ...
+                           uvs(i,2) * svVel(2,i) + uvs(i,3) * svVel(3,i);
+    
+        end
+    
+        y = [psr; dopp] - [psrhat; dopphat];
+    
     end
-
-    y = [psr; dopp] - [psrhat; dopphat];
-
-end
-
-function geomMatrix
+    
+    function geomMatrix
     
     % Geometry Matrix Population
      G = [-uhat_x -uhat_y -uhat_z ones(numMeas,1) zeros(numMeas,4);
