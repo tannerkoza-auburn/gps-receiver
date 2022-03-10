@@ -1,4 +1,18 @@
 classdef gnssReceiver < handle
+% DESCRIPTION: gnssReceiver is a class that contains methods to produce
+% different state solutions depending on the input data to each method.
+% There are 2D and 3D solutions that assume receiver clock bias and a
+% perfect clock. DGPS solutions are also available.
+%
+% METHODS: 
+%   - p3D: 3 dimensional position solution
+%   - pv3D: 3 dimensional position & velocity solution
+%   - p2D: 2 dimensional position solution
+%   - p2DPC: 2 dimensional position solution assuming perfect clock
+%   - sdp2D: single difference 2 dimensional position solution
+%   - ddp2D: double difference 2 dimensional position solution
+%
+% AUTHOR: Tanner Koza
 
     properties (Access = public)
 

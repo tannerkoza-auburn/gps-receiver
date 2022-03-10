@@ -1,6 +1,7 @@
 function out = ddp2D(obj, psr_user, psr_base, svPos, basePos)
 % DESCRIPTION: ddp2D produces a 2D state solution from 2D receiver and base
 % station data.
+%
 % NOTE: Transpose svPos to where corresponding satellite position vectors
 % (x,y) are in columns. Also, if basePos is unknown, run p2D using the base
 % pseudoranges before running this function.
@@ -15,6 +16,8 @@ function out = ddp2D(obj, psr_user, psr_base, svPos, basePos)
 %   - out.clock_bias: clock bias solution (m)
 %   - out.DOP: dillution of precision
 %   - out.P: solution covariance matrix
+%
+% AUTHOR: Tanner Koza
 
 %% Initialization
 

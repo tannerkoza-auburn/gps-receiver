@@ -2,11 +2,14 @@ function out = p2DPC(obj, psr, svPos)
 % DESCRIPTION: p2DPC produces a 2D state solution from 2D receiver data.
 % A perfect clock is also assumed for this case, therefore, there is not
 % clock bias.
+%
 % NOTE: Transpose svPos to where corresponding satellite position vectors
 % (x,y) are in columns.
+%
 % PARAMS:
 %   - psr: pseudoranges (m)
 %   - svPos: satellite ECEF positions (m)
+%
 % OUTPUT:
 %   - out.pos: ECEF position solution (m)
 %   - out.DOP: dillution of precision

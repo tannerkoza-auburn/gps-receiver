@@ -1,5 +1,6 @@
 function out = pv3D(obj, psr, dopp, svPos, svVel, svClockCorr, carrFreq)
 % DESCRIPTION: pv3D produces a GNSS state solution from GNSS receiver data.
+%
 % PARAMS:
 %   - psr: pseudoranges (m)
 %   - dopp: doppler measurements (Hz)
@@ -7,6 +8,7 @@ function out = pv3D(obj, psr, dopp, svPos, svVel, svClockCorr, carrFreq)
 %   - svVel: satellite ECEF velocities (m/s)
 %   - svClockCorr: satellite clock corrections (s)
 %   - carrFreq: GPS carrier L band
+%
 % OUTPUT:
 %   - out.pos: ECEF position solution (m)
 %   - out.vel: ECEF velocity solution (m/s)
@@ -14,6 +16,8 @@ function out = pv3D(obj, psr, dopp, svPos, svVel, svClockCorr, carrFreq)
 %   - out.clock_drift: clock drift solution (m/s)
 %   - out.DOP: dillution of precision
 %   - out.P: solution covariance matrix
+%
+% AUTHOR: Tanner Koza
 
 %% Initialization
 
