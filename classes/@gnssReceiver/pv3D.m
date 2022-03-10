@@ -38,7 +38,7 @@ function out = pv3D(obj, psr, dopp, svPos, svVel, svClockCorr, carrFreq)
     itr = 0;
     
     % Doppler Measurement Unit Conversion (Hz to m/s)
-    dopp = obj.doppConv(dopp, carrFreq);
+    psrdot = obj.doppConv(dopp, carrFreq);
     
     % SV Clock Correction Unit Conversion (s to m)
     C = physconst('LightSpeed');
@@ -121,7 +121,7 @@ function out = pv3D(obj, psr, dopp, svPos, svVel, svClockCorr, carrFreq)
     
         % Initialization 
         psrhat = zeros(numMeas,1);
-        dopphat = zeros(numMeas,1);
+        psrdothat = zeros(numMeas,1);
     
         % Measurement Vector Population
         for i = 1:numMeas
@@ -130,12 +130,12 @@ function out = pv3D(obj, psr, dopp, svPos, svVel, svClockCorr, carrFreq)
                 + ( svPos(2,i) - est(2) )^2 ...
                 + ( svPos(3,i) - est(3) )^2) + est(4) - svClockCorr(i);
     
-            dopphat(i) = uvs(i,1) * svVel(1,i) + ...
+            psrdothat(i) = uvs(i,1) * svVel(1,i) + ...
                            uvs(i,2) * svVel(2,i) + uvs(i,3) * svVel(3,i);
     
         end
     
-        y = [psr; dopp] - [psrhat; dopphat];
+        y = [psr; psrdot] - [psrhat; psrdothat];
     
     end
     
