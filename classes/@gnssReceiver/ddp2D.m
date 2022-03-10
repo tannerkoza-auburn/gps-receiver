@@ -1,5 +1,5 @@
-function out = sdp2D(obj, psr_user, psr_base, svPos, basePos)
-% DESCRIPTION: sdp2D produces a 2D state solution from 2D receiver and base
+function out = ddp2D(obj, psr_user, psr_base, svPos, basePos)
+% DESCRIPTION: ddp2D produces a 2D state solution from 2D receiver and base
 % station data.
 % NOTE: Transpose svPos to where corresponding satellite position vectors
 % (x,y) are in columns. Also, if basePos is unknown, run p2D using the base
@@ -27,7 +27,7 @@ function out = sdp2D(obj, psr_user, psr_base, svPos, basePos)
     % Initialize Shared Variables
     uhat_x = 0;
     uhat_y = 0;
-    y = 0;
+    y = zeros(numMeas-1,1);
     G = 0;
 
 %% Estimation
@@ -54,7 +54,6 @@ function out = sdp2D(obj, psr_user, psr_base, svPos, basePos)
     % Populate Structure
     out.pos = pos;
     out.rpv = rpv;
-    out.clock_bias = est(3);
     out.DOP = DOP;
     out.P = P;
 
@@ -82,14 +81,30 @@ function out = sdp2D(obj, psr_user, psr_base, svPos, basePos)
     
     function measVec
     
-        y = psr_user - psr_base;
+        delta_psr = psr_user - psr_base;
+
+        for i = 2:numMeas
+
+            y(i-1) = delta_psr(1) - delta_psr(i);
+
+        end
+
     
     end
     
     function geomMatrix
     
+        delta_uhat_x = zeros(numMeas-1,1);
+        delta_uhat_y = zeros(numMeas-1,1);
+
+    for i = 2:numMeas
+
+        delta_uhat_x(i-1) = uhat_x(1) - uhat_x(i);
+        delta_uhat_y(i-1) = uhat_y(1) - uhat_y(i);
+
+    end
     % Geometry Matrix Population
-     G = [uhat_x uhat_y ones(numMeas,1)];
+     G = [delta_uhat_x delta_uhat_y];
 
     end
 

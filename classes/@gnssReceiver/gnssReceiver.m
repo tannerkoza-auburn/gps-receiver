@@ -56,8 +56,11 @@ classdef gnssReceiver < handle
         % 2D Position Estimate with Perfect Clock
         est = p2DPC(obj, psr, svPos)
 
-        % 2D Signle Difference Position Estimate
+        % 2D Single Difference Position Estimate
         est = sdp2D(obj, psr_user, psr_base, svPos, basePos)
+
+        % 2D Double Difference Position Estimate
+        est = ddp2D(obj, psr_user, psr_base, svPos, basePos)
                 
     end
 
