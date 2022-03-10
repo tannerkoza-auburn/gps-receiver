@@ -1,82 +1,41 @@
 function varargout = dimHandle(varargin)
 
-    switch nargin
+  if nargin ~= nargout
+      error('Number of Outputs needs to equal Inputs.')
+  end
 
-        case 2
-            numMeas = length(varargin{1});
+  numMeas = length(varargin{1});
 
-            sz1 = size(varargin{1});
-            sz2 = size(varargin{2});
+  for i = 1:nargout
 
-            if sz1(1) ~= numMeas
+      sz = size(varargin{i});
 
-                varargout{1} = varargin{1}';
+      if isvector(varargin{i})
 
-            else
+         if sz(1) ~= numMeas
 
-                varargout{1} = varargin{1};
+             varargout{i} = varargin{i}'; %#ok<*AGROW> 
 
-            end
+         else
 
-            if sz2(2) ~= numMeas
+             varargout{i} = varargin{i};
 
-                varargout{2} = varargin{2}';
+         end
 
-            else
+      else
 
-                varargout{2} = varargin{2};
+        if sz(2) ~= numMeas
 
-            end
+             varargout{i} = varargin{i}';
 
-        case 4
+        else
 
-            numMeas = length(varargin{1});
+             varargout{i} = varargin{i};
 
-            sz1 = size(varargin{1});
-            sz2 = size(varargin{2});
-            sz3 = size(varargin{3});
-            sz4 = size(varargin{4});
+        end
 
-            if sz1(1) ~= numMeas
+      end
 
-                varargout{1} = varargin{1}';
-
-            else
-
-                varargout{1} = varargin{1};
-
-            end
-
-            if sz2(1) ~= numMeas
-
-                varargout{2} = varargin{2}';
-
-            else
-
-                varargout{2} = varargin{2};
-
-            end
-
-            if sz3(2) ~= numMeas
-
-                varargout{3} = varargin{3}';
-
-            else
-
-                varargout{3} = varargin{3};
-
-            end
-
-            if sz4(2) ~= numMeas
-
-                varargout{4} = varargin{4}';
-
-            else
-
-                varargout{4} = varargin{4};
-
-            end
-
-    end   
+  end
 
 end
