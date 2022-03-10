@@ -11,7 +11,7 @@ function out = pv3D(obj, psr, dopp, svPos, svVel, svClockCorr, carrFreq)
 %   - out.pos: ECEF position solution (m)
 %   - out.vel: ECEF velocity solution (m/s)
 %   - out.clock_bias: clock bias solution (m)
-%   - out.clock_drfit: clock drfit solution (m/s)
+%   - out.clock_drift: clock drift solution (m/s)
 %   - out.DOP: dillution of precision
 %   - out.P: solution covariance matrix
 
