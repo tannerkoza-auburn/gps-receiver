@@ -1,6 +1,6 @@
 classdef gnssReceiver < handle
 
-    properties
+    properties (Access = public)
 
         % Receiver Properties
         rcvrSigma
@@ -10,6 +10,10 @@ classdef gnssReceiver < handle
         initVel = [0; 0; 0]; % ECEF (m/s)
         initClockBias = 0; % (m)
         initClockDrift = 0; % (m/s)
+
+    end
+
+    properties (Access = protected, Constant)
 
         % Carrier Frequency Definitions (Hz)
         L1 = 1575.42e6;
@@ -22,7 +26,7 @@ classdef gnssReceiver < handle
 
     end
 
-    methods
+    methods (Access = public)
 
         % Class Constructor
         function obj = gnssReceiver(rcvrSigma)
@@ -51,14 +55,14 @@ classdef gnssReceiver < handle
                 
     end
 
-    methods (Hidden, Sealed)
+    methods (Access = protected, Hidden, Sealed)
 
         % Doppler Conversion
         dopp = doppConv(obj, dopp, carrFreq)
 
     end
 
-    methods (Hidden, Sealed, Static)
+    methods (Access = protected, Hidden, Sealed, Static)
         
         % Input Data Dimension Handling
         varargout = dimHandle(varargin)
