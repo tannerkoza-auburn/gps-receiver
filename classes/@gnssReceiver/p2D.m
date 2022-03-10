@@ -1,15 +1,20 @@
 function out = p2D(obj, psr, svPos)
 % DESCRIPTION: p2D produces a 2D state solution from 2D receiver data.
+%
 % NOTE: Transpose svPos to where corresponding satellite position vectors
 % (x,y) are in columns.
+%
 % PARAMS:
 %   - psr: pseudoranges (m)
 %   - svPos: satellite ECEF positions (m)
+%
 % OUTPUT:
 %   - out.pos: ECEF position solution (m)
 %   - out.clock_bias: clock bias solution (m)
 %   - out.DOP: dillution of precision
 %   - out.P: solution covariance matrix
+%
+% AUTHOR: Tanner Koza
 
 %% Initialization
 

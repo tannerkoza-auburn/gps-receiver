@@ -1,4 +1,8 @@
 function varargout = dimHandle(varargin)
+% DESCRIPTION: dimHandle transposes input vectors and matrices into the
+% correct dimensions to be used in the solution methods, if needed.
+%
+% AUTHOR: Tanner Koza
 
   if nargin ~= nargout
       error('Number of Outputs needs to equal Inputs.')
