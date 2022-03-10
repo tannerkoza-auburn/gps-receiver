@@ -51,7 +51,13 @@ classdef gnssReceiver < handle
         est = pv3D(obj, psr, dopp, svPos, svVel, svClockCorr, carrFreq)
         
         % 2D Position Estimate
-        p2D(obj)
+        est = p2D(obj, psr, svPos)
+
+        % 2D Position Estimate with Perfect Clock
+        est = p2DPC(obj, psr, svPos)
+
+        % 2D Signle Difference Position Estimate
+        est = sdp2D(obj, psr_user, psr_base, svPos, basePos)
                 
     end
 
