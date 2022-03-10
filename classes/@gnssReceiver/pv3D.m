@@ -1,5 +1,5 @@
 function out = pv3D(obj, psr, dopp, svPos, svVel, svClockCorr, carrFreq)
-% DESCRIPTION: pv3D produces a GNSS sate solution from GNSS receiver data.
+% DESCRIPTION: pv3D produces a GNSS state solution from GNSS receiver data.
 % PARAMS:
 %   - psr: pseudoranges (m)
 %   - dopp: doppler measurements (Hz)
