@@ -6,6 +6,9 @@ function out = doppConv(obj, dopp, carrFreq)
 %   - carrFreq: GPS carrier L band
 % OUTPUT:
 %   - out: GNSS doppler measurements (m/s)
+%
+% AUTHOR: Tanner Koza
+
 
 %% Initialization
 

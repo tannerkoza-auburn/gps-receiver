@@ -149,6 +149,6 @@ function out = pv3D(obj, psr, dopp, svPos, svVel, svClockCorr, carrFreq)
      G = [-uhat_x -uhat_y -uhat_z ones(numMeas,1) zeros(numMeas,4);
         zeros(numMeas,4) -uhat_x -uhat_y -uhat_z ones(numMeas,1)];
 
-end
+    end
 
 end
