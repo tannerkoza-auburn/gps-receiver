@@ -44,7 +44,7 @@ function out = sdp2D(obj, psr_user, psr_base, svPos, basePos)
 
     est = ( G' * G )^-1 * G' * y;
 
-    rpv = est(1:2);
+    rpv = -est(1:2);
 
     % User-Base Relative Position Vector
     pos = basePos + rpv;
