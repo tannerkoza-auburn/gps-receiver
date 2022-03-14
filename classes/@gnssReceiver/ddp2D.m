@@ -22,7 +22,7 @@ function out = ddp2D(obj, psr_user, psr_base, svPos, basePos)
 %% Initialization
 
     % Handle Input Dimensions
-    [psr_user, psr_base, svPos, basePos] = obj.dimHandle(psr_user, psr_base, svPos, basePos);
+    [psr_user, psr_base, svPos] = obj.dimHandle(psr_user, psr_base, svPos);
 
     % Define Number of Measurements
     numMeas = length(psr_user);

@@ -58,11 +58,17 @@ classdef gnssReceiver < handle
             
         end
         
-        % 3D Position Estimate
-        p3D(obj)
+        % 3D Position Estimate with Perfect Clock
+        est = p3D(obj, psr_user, svPos)
         
         % 3D Position & Velocity Estimate
         est = pv3D(obj, psr, dopp, svPos, svVel, svClockCorr, carrFreq)
+        
+        % 3D Single Difference Position Estimate
+        est = sdp3D(obj, psr_user, psr_base, svPos, basePos)
+
+        % 3D Double Difference Position Estimate
+        est = ddp3D(obj, psr_user, psr_base, svPos, basePos)
         
         % 2D Position Estimate
         est = p2D(obj, psr, svPos)

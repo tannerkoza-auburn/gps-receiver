@@ -1,9 +1,9 @@
-function out = sdp2D(obj, psr_user, psr_base, svPos, basePos)
-% DESCRIPTION: sdp2D produces a 2D state solution from 2D receiver and base
+function out = sdp3D(obj, psr_user, psr_base, svPos, basePos)
+% DESCRIPTION: sdp3D produces a 3D state solution from 3D receiver and base
 % station data.
 %
 % NOTE: Transpose svPos to where corresponding satellite position vectors
-% (x,y) are in columns. Also, if basePos is unknown, run p2D using the base
+% (x,y) are in columns. Also, if basePos is unknown, run p3D using the base
 % pseudoranges before running this function.
 % 
 % PARAMS:
@@ -31,6 +31,7 @@ function out = sdp2D(obj, psr_user, psr_base, svPos, basePos)
     % Initialize Shared Variables
     uhat_x = 0;
     uhat_y = 0;
+    uhat_z = 0;
     y = 0;
     G = 0;
 
@@ -44,7 +45,7 @@ function out = sdp2D(obj, psr_user, psr_base, svPos, basePos)
 
     est = ( G' * G )^-1 * G' * y;
 
-    rpv = -est(1:2);
+    rpv = -est(1:3);
 
     % User-Base Relative Position Vector
     pos = basePos + rpv;
@@ -58,7 +59,7 @@ function out = sdp2D(obj, psr_user, psr_base, svPos, basePos)
     % Populate Structure
     out.pos = pos;
     out.rpv = rpv;
-    out.clock_bias = est(3);
+    out.clock_bias = est(4);
     out.DOP = DOP;
     out.P = P;
 
@@ -69,16 +70,20 @@ function out = sdp2D(obj, psr_user, psr_base, svPos, basePos)
         % Initialization
         uhat_x = zeros(numMeas,1);
         uhat_y = zeros(numMeas,1);
+        uhat_z = zeros(numMeas,1);
     
         % Calculate Satellite Unit Vectors
         for i = 1:numMeas
     
             r = sqrt( ( svPos(1,i) - basePos(1) )^2 ...
-                + ( svPos(2,i) - basePos(2) )^2 );  
+                + ( svPos(2,i) - basePos(2) )^2 ...
+                + ( svPos(3,i) - basePos(3) )^2 );  
     
             uhat_x(i) = ( svPos(1,i) - basePos(1) )/ r;
     
             uhat_y(i) = ( svPos(2,i) - basePos(2) )/ r;
+
+            uhat_z(i) = ( svPos(3,i) - basePos(3) )/ r;
     
         end
     
@@ -93,7 +98,7 @@ function out = sdp2D(obj, psr_user, psr_base, svPos, basePos)
     function geomMatrix
     
     % Geometry Matrix Population
-     G = [uhat_x uhat_y ones(numMeas,1)];
+     G = [uhat_x uhat_y uhat_z ones(numMeas,1)];
 
     end
 
