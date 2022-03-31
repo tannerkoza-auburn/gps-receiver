@@ -1,4 +1,4 @@
-function out = pv3D(obj, psr, dopp, svPos, svVel, svClockCorr, carrFreq)
+function out = p3D(obj, psr, dopp, svPos, svVel, svClockCorr, carrFreq)
 % DESCRIPTION: pv3D produces a GNSS state solution from GNSS receiver data.
 %
 % PARAMS:
