@@ -83,7 +83,7 @@ classdef gnssReceiver < handle
         est = ddp2D(obj, psr_user, psr_base, svPos, basePos)
                 
         % 3D carrier-based DGPS (RTK)
-        est = sdCarr3D(obj, carr_user, carr_base, svPos, basePos, N_ab)
+        est = sdCarr3D(obj, psr_user, carrL1_user, carrL2_user, psr_base, carrL1_base, carrL2_base, svPos, basePos, N_ab)
         
     end
 
