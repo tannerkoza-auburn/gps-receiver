@@ -87,10 +87,21 @@ measurements ordered as [rho_1, phi_L1_1, phi_L2_1, rho_2, phi_L1_2, phi_L2_2...
     
     % float-level integer uncertainty
     P_N = inv(H.' * inv(R) * H);
+    P_N = (P_N + P_N.')/2; % force symmetry! 
     
     
 %% Lambda Corrections    
+    %{ 
+        okay so hear me out.... with really small values of P... round off
+        errors result in non-positive-semi-definite matrices that the LAMBDA
+        algorithm gets pissy about... I scaled each element of the covariance
+        by a massive number to avoid this... I believe only the RELATIVE
+        magnitudes matter for the algorithm, so this SHOULD be okay?
+    %}
+    [N_est, sqnorm] = LAMBDA(N_est, P_N.*1E20, 1);
     
+    % ^ above reports mutliple options for integers along with estimates of
+    % accuracy for each... 
     
     
 %% Estimation 
@@ -148,8 +159,10 @@ measurements ordered as [rho_1, phi_L1_1, phi_L2_1, rho_2, phi_L1_2, phi_L2_2...
     function measVec
     
         for i = 1:numMeas
+            C = physconst('LightSpeed');
+            lamb1 = C / 1575.42*10^6;
             N_L1 = N_est(1 + 2*(i - 1)); % odd indices are L1 integers
-            y(i,1) = carrL1_user(j) - carrL1_base(j) - N_L1;
+            y(i,1) = carrL1_user(j) - carrL1_base(j) - lamb1*N_L1;
         end 
     
     end
