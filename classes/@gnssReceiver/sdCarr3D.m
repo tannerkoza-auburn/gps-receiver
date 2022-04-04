@@ -99,7 +99,8 @@ measurements ordered as [rho_1, phi_L1_1, phi_L2_1, rho_2, phi_L1_2, phi_L2_2...
         magnitudes matter for the algorithm, so this SHOULD be okay?
     %}
     [N_est, sqnorm] = LAMBDA(N_est, P_N.*1E20, 1);
-    
+    N_est = N_est(:,1);
+    out.N_lambda = N_est; % save estimate of integers to ouput struct
     % ^ above reports mutliple options for integers along with estimates of
     % accuracy for each... 
     
