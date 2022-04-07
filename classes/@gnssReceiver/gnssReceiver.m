@@ -82,8 +82,11 @@ classdef gnssReceiver < handle
         % 2D Double Difference Position Estimate
         est = ddp2D(obj, psr_user, psr_base, svPos, basePos)
                 
-        % 3D carrier-based DGPS (RTK)
+        % 3D carrier-based DGPS (RTK) single-diff
         est = sdCarr3D(obj, psr_user, carrL1_user, carrL2_user, psr_base, carrL1_base, carrL2_base, svPos, basePos, N_ab)
+        
+        % 3D carrier-based DGPS (RTK) double-diff
+        est = ddCarr3D(obj, psr_user, carrL1_user, carrL2_user, psr_base, carrL1_base, carrL2_base, svPos, basePos, N_ab)
         
     end
 

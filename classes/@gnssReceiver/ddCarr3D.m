@@ -14,10 +14,8 @@ function out = sdCarr3D(obj, psr_user, carrL1_user, carrL2_user, psr_base, carrL
     Output
     - out.pos: ECEF position solution of user (m)
     - out.N_lambda: resulting lambda integer estimates
-    - out.clock_bias: clock bias btween user and base (user - base) (m)
     - out.DOP: dilution of precision 
     - out.P: solution covariance matrix
-
     
     
     there exists an integer ambiguity btwn base and user for each satellite and 
@@ -55,22 +53,22 @@ measurements ordered as [rho_1, phi_L1_1, phi_L2_1, rho_2, phi_L1_2, phi_L2_2...
     geomMatrixN; % construct geometry matrix (G) and the lambda matrix - same form for the psr and carr
     
     % extend lambda matrix and construct y for number of sats in view:    
-    for j = 1:numMeas        
+    for j = 2:numMeas        
         
-        delRho = psr_user(j) - psr_base(j);
-        delPhi_L1 = carrL1_user(j) - carrL1_base(j);
-        delPhi_L2 = carrL2_user(j) - carrL2_base(j);
+        dblDelRho = (psr_user(1) - psr_base(1)) - (psr_user(j) - psr_base(j));
+        dblDelPhi_L1 = (carrL1_user(1) - carrL1_base(1)) - (carrL1_user(j) - carrL1_base(j));
+        dblDelPhi_L2 = (carrL2_user(1) - carrL2_base(1)) - (carrL2_user(j) - carrL2_base(j));
         
-        if j == 1
-            yN = [delRho; delPhi_L1; delPhi_L2];
-            R = [1^2    0   0; 
-                0   .01^2     0;
-                0   0   .01^2]; % noise on psr, phi, phi
+        if j == 2
+            yN = [dblDelRho; dblDelPhi_L1; dblDelPhi_L2];
+            R = [sqrt(1^2 + 1^2)    0   0; 
+                0   sqrt(.01^2 + .01^2)     0;
+                0   0   sqrt(.01^2 + 0.1^2)]; % noise on psr, phi, phi
         else
-            yN = [yN; delRho; delPhi_L1; delPhi_L2];
-            R = blkdiag(R, [1^2    0   0; 
-                        0   .01^2     0;
-                        0   0   .01^2]);
+            yN = [yN; dblDelRho; dblDelPhi_L1; dblDelPhi_L2];
+            R = blkdiag(R, [sqrt(1^2 + 1^2)    0   0; 
+                0   sqrt(.01^2 + .01^2)     0;
+                0   0   sqrt(.01^2 + 0.1^2)]); % noise on psr, phi, phi
         end         
     end 
         
@@ -120,13 +118,12 @@ measurements ordered as [rho_1, phi_L1_1, phi_L2_1, rho_2, phi_L1_2, phi_L2_2...
     % Populate Structure
     out.pos = pos;
     out.rpv = rpv;
-    out.clock_bias = est(4);
     out.DOP = DOP;
     out.P = P;
 
 %% Nested Functions
 
-    function unitVecs
+     function unitVecs % calculate delta unit vectors
     
         % Initialization
         uhat_x = zeros(numMeas,1);
@@ -149,25 +146,32 @@ measurements ordered as [rho_1, phi_L1_1, phi_L2_1, rho_2, phi_L1_2, phi_L2_2...
         end
     
     end
-    
     function measVec
-    
+        
         for i = 1:numMeas
             C = physconst('LightSpeed');
             lamb1 = C / (1575.42e6);
-            lamb2 = C / (1227.6e6);
-            N_L1 = N_est(2*i - 1); % odd indices are L1 integers
-            N_L2 = N_est(2*i); % even indices are L2 integers
-            y(i,1) = carrL1_user(i) - carrL1_base(i) - lamb1*N_L1;
+            %lamb2 = C / (1227.6e6);
+           % N_L1 = N_est(2*i - 1); % odd indices are L1 integers
+            %N_L2 = N_est(2*i); % even indices are L2 integers
+            
+            delCarrL1(i) = carrL1_user(i) - carrL1_base(i);
+            
             % y(i,1) = carrL2_user(i) - carrL2_base(i) - lamb2*N_L2; % L2 option
         end 
     
+        for i = 2:numMeas
+            N_L1 = N_est(2*i - 3); % odd indices are L1 integers
+            y(i-1,1) = delCarrL1(1) - delCarrL1(i) - lamb1*N_L1; % dbl difference
+        end
+            
+        
     end
     
     function geomMatrix
         % construct Phi_L1 measurement matrix... not using psr or L2    
-        for i = 1:numMeas            
-            G(end+1,:) = [uhat_x(i) uhat_y(i) uhat_z(i) 1];
+        for i = 2:numMeas            
+            G(end+1,:) = G_N(3*(i-1),:); %[uhat_x(i) uhat_y(i) uhat_z(i) 1];
         end 
     end 
 
@@ -178,14 +182,14 @@ measurements ordered as [rho_1, phi_L1_1, phi_L2_1, rho_2, phi_L1_2, phi_L2_2...
     lamb1 = C / (1575.42e6);
     lamb2 = C / (1227.6e6);
     
-    for i = 1:numMeas
+
+    for i = 2:numMeas
+        % delta unit vectors between first sat and others
+        delta_uhat_x = uhat_x(1) - uhat_x(i);
+        delta_uhat_y = uhat_y(1) - uhat_y(i);
+        delta_uhat_z = uhat_z(1) - uhat_z(i);
         
-        % 3x for each sat... delRho, delPhiL1, delPhiL2
-        G_N(end+1:end+3, :) = [uhat_x(i) uhat_y(i) uhat_z(i) 1;
-                             uhat_x(i) uhat_y(i) uhat_z(i) 1;
-                             uhat_x(i) uhat_y(i) uhat_z(i) 1];       
-                
-        if i == 1
+        if i == 2
             lambdaMat =  [0 0;
                         lamb1 0; 
                         0   lamb2];
@@ -194,6 +198,11 @@ measurements ordered as [rho_1, phi_L1_1, phi_L2_1, rho_2, phi_L1_2, phi_L2_2...
                                             lamb1 0; 
                                             0   lamb2]);
         end 
+        
+        G_N(end+1:end+3, :) = [delta_uhat_x delta_uhat_y delta_uhat_z;
+                             delta_uhat_x delta_uhat_y delta_uhat_z;
+                             delta_uhat_x delta_uhat_y delta_uhat_z];    
+        
     end 
 
     end

@@ -30,7 +30,7 @@ function out = ddp3D(obj, psr_user, psr_base, svPos, basePos)
     % Initialize Shared Variables
     uhat_x = 0;
     uhat_y = 0;
-    uhat_z = 0;
+    uhat_z = 0;l
     y = zeros(numMeas-1,1);
     G = 0;
 
