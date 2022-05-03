@@ -59,7 +59,7 @@ classdef gnssReceiver < handle
         end
         
         % 3D Position Estimate with Perfect Clock
-        est = p3D(obj, psr_user, svPos)
+        est = p3D(obj, psr_user, svPos, svClockCorr)
         
         % 3D Position & Velocity Estimate
         est = pv3D(obj, psr, dopp, svPos, svVel, svClockCorr, carrFreq)

@@ -3,11 +3,9 @@ function out = p3D(obj, psr, svPos, svClockCorr)
 %
 % PARAMS:
 %   - psr: pseudoranges (m)
-%   - dopp: doppler measurements (Hz)
 %   - svPos: satellite ECEF positions (m)
-%   - svVel: satellite ECEF velocities (m/s)
 %   - svClockCorr: satellite clock corrections (s)
-%   - carrFreq: GPS carrier L band
+
 %
 % OUTPUT:
 %   - out.pos: ECEF position solution (m)
@@ -35,14 +33,14 @@ function out = p3D(obj, psr, svPos, svClockCorr)
     G = 0;
 
     % Initialize State Estimate Vector
-    est = [obj.initPos; obj.initClockBias; obj.initVel; obj.initClockDrift];
+    est = [obj.initPos; obj.initClockBias];
     
     % Initialize Least Squares Iteration Count
     itr = 0;
     
     % SV Clock Correction Unit Conversion (s to m)
     C = physconst('LightSpeed');
-    svClockCorr = svClockCorr * C;
+%     svClockCorr = svClockCorr * C;
 
 %% Estimation
 
@@ -78,7 +76,6 @@ function out = p3D(obj, psr, svPos, svClockCorr)
     % Populate Structure
     out.pos = est(1:3);
     out.clock_bias = est(4);
-    out.clock_drfit = dest(8);
     out.DOP = DOP;
     out.P = P;
 
