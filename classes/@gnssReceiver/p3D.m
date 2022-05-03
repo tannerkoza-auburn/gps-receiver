@@ -1,4 +1,4 @@
-function out = p3D(obj, psr, dopp, svPos, svVel, svClockCorr, carrFreq)
+function out = p3D(obj, psr, svPos, svClockCorr)
 % DESCRIPTION: pv3D produces a GNSS state solution from GNSS receiver data.
 %
 % PARAMS:
@@ -22,13 +22,12 @@ function out = p3D(obj, psr, dopp, svPos, svVel, svClockCorr, carrFreq)
 %% Initialization
 
     % Handle Input Dimensions
-    [psr, dopp, svPos, svVel] = obj.dimHandle(psr, dopp, svPos, svVel);
+    [psr, svPos] = obj.dimHandle(psr, svPos);
 
     % Define Number of Measurements
     numMeas = length(psr);
 
     % Initialize Shared Variables
-    uvs = 0;
     uhat_x = 0;
     uhat_y = 0;
     uhat_z = 0;
@@ -40,9 +39,6 @@ function out = p3D(obj, psr, dopp, svPos, svVel, svClockCorr, carrFreq)
     
     % Initialize Least Squares Iteration Count
     itr = 0;
-    
-    % Doppler Measurement Unit Conversion (Hz to m/s)
-    psrdot = obj.doppConv(dopp, carrFreq);
     
     % SV Clock Correction Unit Conversion (s to m)
     C = physconst('LightSpeed');
@@ -81,7 +77,6 @@ function out = p3D(obj, psr, dopp, svPos, svVel, svClockCorr, carrFreq)
 
     % Populate Structure
     out.pos = est(1:3);
-    out.vel = dest(5:7);
     out.clock_bias = est(4);
     out.clock_drfit = dest(8);
     out.DOP = DOP;
@@ -117,15 +112,12 @@ function out = p3D(obj, psr, dopp, svPos, svVel, svClockCorr, carrFreq)
     
         end
     
-        uvs = [uhat_x uhat_y uhat_z];
-    
     end
     
     function measVec
     
         % Initialization 
         psrhat = zeros(numMeas,1);
-        psrdothat = zeros(numMeas,1);
     
         % Measurement Vector Population
         for i = 1:numMeas
@@ -134,20 +126,16 @@ function out = p3D(obj, psr, dopp, svPos, svVel, svClockCorr, carrFreq)
                 + ( svPos(2,i) - est(2) )^2 ...
                 + ( svPos(3,i) - est(3) )^2) + est(4) - svClockCorr(i);
     
-            psrdothat(i) = uvs(i,1) * svVel(1,i) + ...
-                           uvs(i,2) * svVel(2,i) + uvs(i,3) * svVel(3,i);
-    
         end
     
-        y = [psr; psrdot] - [psrhat; psrdothat];
+        y = psr - psrhat;
     
     end
     
     function geomMatrix
     
     % Geometry Matrix Population
-     G = [-uhat_x -uhat_y -uhat_z ones(numMeas,1) zeros(numMeas,4);
-        zeros(numMeas,4) -uhat_x -uhat_y -uhat_z ones(numMeas,1)];
+     G = [-uhat_x -uhat_y -uhat_z ones(numMeas,1)];
 
     end
 
