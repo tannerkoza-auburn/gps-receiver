@@ -7,7 +7,7 @@ gps-receiver is a repository with a GNSS Receiver MATLAB class and associated fu
 Clone the repo.
 
 ```sh
-git clone git@github.com:tannerkoza/gnss-receiver.git
+git clone git@github.com:tannerkoza/gps-receiver.git
 ```
 
 ## Usage
