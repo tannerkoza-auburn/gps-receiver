@@ -1,6 +1,6 @@
 # gps-receiver
 
-gps-receiver is a repository with a GNSS Receiver MATLAB class and associated functions used to calculate navigation solutions in the Fundamentals of GPS Navigation (MECH 6970) course at Auburn University.
+***gps-receiver*** is a repository with a GNSS Receiver MATLAB class and associated functions used to calculate navigation solutions in the Fundamentals of GPS Navigation (MECH 6970) course at Auburn University.
 
 ## Installation
 
